@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RenoiseScriptingTool doc_version="0">
+  <ApiVersion>6.1</ApiVersion>
+  <Id>org.tris.SliceStretcher</Id>
+  <Version>0.1</Version>
+  <Author>Tristan Strange | tristan.strange@gmail.com  </Author>
+  <Name>Slice Stretcher</Name>
+  <Category>Slice manipulation</Category>
+  <Description>Stretch each slice relative to the source sample's beatsync length.</Description>
+  <Homepage>http://tools.renoise.com</Homepage>
+</RenoiseScriptingTool>
