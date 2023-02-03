@@ -1,5 +1,5 @@
 --[[============================================================================
-Instrument Randomizer
+Slice Stretcher
 ============================================================================]]--
 
 _AUTO_RELOAD_DEBUG = true
@@ -38,7 +38,6 @@ local function halve_length(i)
     s.beat_sync_lines = math.ceil(s.beat_sync_lines / 2)
   end
 end
-
 
 --------------------------------------------------------------------------------
 -- UI stuff
