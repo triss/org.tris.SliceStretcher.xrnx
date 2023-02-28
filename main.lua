@@ -39,12 +39,59 @@ local function halve_length(i)
   end
 end
 
+local function set_beat_sync(i, b)
+  for _, s in pairs(i.samples) do
+    s.beat_sync_enabled = b
+  end
+end
+
+local function set_mute_group(i, g)
+  for _, s in pairs(i.samples) do
+    s.mute_group = g
+  end
+end
+
+local function set_nna(i, a)
+  for _, s in pairs(i.samples) do
+    s.new_note_action = a
+  end
+end
+
+local function set_oneshot(i, b)
+  for _, s in pairs(i.samples) do
+    s.oneshot = b
+  end
+end
+
+local function casiino_stretch(i)
+  stretch_slices(i, renoise.Sample.BEAT_SYNC_TEXTURE)
+  set_oneshot(i, true)
+  set_mute_group(i, 1)
+  set_nna(i, renoise.Sample.NEW_NOTE_ACTION_NOTE_CUT)
+end
+
 --------------------------------------------------------------------------------
 -- UI stuff
 --------------------------------------------------------------------------------
 
-renoise.tool():add_menu_entry {
-  name = "Sample Editor:Stretch Slices:With Texture Beatsync",
+local function add_menu_and_keybind(t)
+  renoise.tool():add_menu_entry { 
+    name = "Sample Editor:Stretch Slices:" .. t.name, 
+    invoke = t.invoke 
+  }
+  renoise.tool():add_keybinding { 
+    name = "Global:Stretch Slices:" .. t.name, 
+    invoke = t.invoke 
+  }
+end
+
+add_menu_and_keybind {
+  name = "Casiino Stretch",
+  invoke = function() casiino_stretch( renoise.song().selected_instrument) end
+}
+
+add_menu_and_keybind {
+  name = "With Texture Beatsync",
   invoke = function() 
     stretch_slices(
       renoise.song().selected_instrument, 
@@ -53,18 +100,8 @@ renoise.tool():add_menu_entry {
   end
 }
 
-renoise.tool():add_keybinding {
-  name = "Global:Stretch Slices:With Texture Beatsync",
-  invoke = function() 
-    stretch_slices(
-      renoise.song().selected_instrument, 
-      renoise.Sample.BEAT_SYNC_TEXTURE
-    )
-  end
-}
-
-renoise.tool():add_menu_entry {
-  name = "Sample Editor:Stretch Slices:With Repitch Beatsync",
+add_menu_and_keybind {
+  name = "With Repitch Beatsync",
   invoke = function() 
     stretch_slices(
       renoise.song().selected_instrument, 
@@ -73,17 +110,8 @@ renoise.tool():add_menu_entry {
   end
 }
 
-renoise.tool():add_keybinding {
-  name = "Global:Stretch Slices:With Repitch Beatsync",
-  invoke = function() 
-    stretch_slices(
-      renoise.song().selected_instrument, 
-      renoise.Sample.BEAT_SYNC_REPITCH
-    )
-  end
-}
-renoise.tool():add_menu_entry {
-  name = "Sample Editor:Stretch Slices:With Percussion Beatsync",
+add_menu_and_keybind {
+  name = "With Percussion Beatsync",
   invoke = function() 
     stretch_slices(
       renoise.song().selected_instrument, 
@@ -92,32 +120,67 @@ renoise.tool():add_menu_entry {
   end
 }
 
-renoise.tool():add_keybinding {
-  name = "Global:Stretch Slices:With Percussion Beatsync",
+add_menu_and_keybind {
+  name = "Double length",
+  invoke = function() double_length(renoise.song().selected_instrument) end
+}
+
+add_menu_and_keybind {
+  name = "Halve length",
+  invoke = function() halve_length(renoise.song().selected_instrument) end
+}
+
+add_menu_and_keybind {
+  name = "Enable Beat Sync",
+  invoke = function() set_beat_sync(renoise.song().selected_instrument, true) end
+}
+
+add_menu_and_keybind {
+  name = "Disable Beat Sync",
+  invoke = function() set_beat_sync(renoise.song().selected_instrument, false) end
+}
+
+add_menu_and_keybind {
+  name = "Enable One-Shot",
+  invoke = function() set_oneshot(renoise.song().selected_instrument, true) end
+}
+
+add_menu_and_keybind {
+  name = "Disable One-Shot",
+  invoke = function() set_oneshot(renoise.song().selected_instrument, false) end
+}
+
+add_menu_and_keybind {
+  name = "Set NNA Cut",
   invoke = function() 
-    stretch_slices(
-      renoise.song().selected_instrument, 
-      renoise.Sample.BEAT_SYNC_PERCUSSION
-    )
+    set_nna(renoise.song().selected_instrument, renoise.Sample.NEW_NOTE_ACTION_NOTE_CUT)
   end
 }
 
-renoise.tool():add_menu_entry {
-  name = "Sample Editor:Stretch Slices:Double length",
-  invoke = function() double_length(renoise.song().selected_instrument) end
+add_menu_and_keybind {
+  name = "Set NNA Note Off",
+  invoke = function() 
+    set_nna(renoise.song().selected_instrument, renoise.Sample.NEW_NOTE_ACTION_NOTE_OFF)
+  end
 }
 
-renoise.tool():add_menu_entry {
-  name = "Sample Editor:Stretch Slices:Halve length",
-  invoke = function() halve_length(renoise.song().selected_instrument) end
+add_menu_and_keybind {
+  name = "Set NNA Sustain",
+  invoke = function() 
+    set_nna(renoise.song().selected_instrument, renoise.Sample.NEW_NOTE_ACTION_SUSTAIN)
+  end
 }
 
-renoise.tool():add_keybinding {
-  name = "Global:Stretch Slices:Double length",
-  invoke = function() double_length(renoise.song().selected_instrument) end
+add_menu_and_keybind {
+  name = "Set Mute Group 1",
+  invoke = function() 
+    set_mute_group(renoise.song().selected_instrument, 1)
+  end
 }
 
-renoise.tool():add_keybinding {
-  name = "Global:Stretch Slices:Halve length",
-  invoke = function() halve_length(renoise.song().selected_instrument) end
+add_menu_and_keybind {
+  name = "Set Mute Group None",
+  invoke = function() 
+    set_mute_group(renoise.song().selected_instrument, 0)
+  end
 }
